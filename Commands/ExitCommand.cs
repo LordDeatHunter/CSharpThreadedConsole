@@ -15,7 +15,7 @@ namespace ThreadedConsole.Commands
             Aliases.Add("leave");
         }
         
-        public override void Execute(IEnumerable<string> arguments, ConsoleManager consoleManager)
+        public override void Execute(string[] arguments, ConsoleManager consoleManager)
         {
             consoleManager.EnqueueMessage(new Message("Stopping server..."));
             consoleManager.Stop();

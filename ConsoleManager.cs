@@ -18,12 +18,13 @@ namespace ThreadedConsole
             set => _currentCursorTop = Math.Min(value, Console.BufferHeight - 1);
         }
         private bool _updateInput;
-        private Thread _ioThread;
-        private Thread _printQueueThread;
+        private readonly Thread _ioThread;
+        private readonly Thread _printQueueThread;
         private const string Prompt = "> ";
         private readonly List<string> _history = new();
         private int _historyIndex;
-        private IConsoleContainer _consoleContainer;
+        private readonly IConsoleContainer _consoleContainer;
+        private bool _isRunning;
 
         public ConsoleManager(IConsoleContainer container)
         {
@@ -37,15 +38,21 @@ namespace ThreadedConsole
 
         public void Start()
         {
-            Console.SetBufferSize(Console.BufferWidth, 3000);
+            if (_isRunning)
+            {
+                EnqueueMessage(new Message("ConsoleManager is already started", "ConsoleManager", false, Message.MessageType.Error));
+                return;
+            }
+            _isRunning = true;
+            //Console.SetBufferSize(Console.BufferWidth, 3000);
             _currentCursorTop = Console.CursorTop;
             _ioThread.Start();
             _printQueueThread.Start();
         }
 
-        // ReSharper disable once InconsistentNaming
         public void Stop()
         {
+            _isRunning = false;
             _consoleContainer.Stop();
         }
 

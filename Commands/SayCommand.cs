@@ -13,7 +13,7 @@ namespace ThreadedConsole.Commands
             Aliases.Add("say");
         }
 
-        public override void Execute(IEnumerable<string> arguments, ConsoleManager consoleManager)
+        public override void Execute(string[] arguments, ConsoleManager consoleManager)
         {
             var output = string.Join(' ', arguments.Skip(1));
             consoleManager.EnqueueMessage(
